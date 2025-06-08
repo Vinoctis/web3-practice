@@ -1,0 +1,49 @@
+package main 
+
+import (
+	//"github.com/ethereum/go-ethereum/ethclient"
+	"context"
+	"log"
+	"fmt"
+	"math/big"
+)
+
+func main() {
+	// client, err := ethclient.Dial()
+	// if err!= nil {
+	// 	log.Fatal(err)
+	// }
+	
+	// blockNumber := big.NewInt(5671744)
+	// header, err := client.HeaderByNumber(context.Background(), blockNumber)
+	// if err!= nil {
+	// 	log.Fatal(err)
+	// }
+
+	eth := NewEthClient()
+	client := eth.Client
+	header, err := client.HeaderByNumber(context.Background(), big.NewInt(5671744))
+	if err!= nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("区块高度：", header.Number.Uint64())
+	fmt.Println("区块时间戳：", header.Time)
+	fmt.Println("出块难度：", header.Difficulty.Uint64())
+	fmt.Println("header Hash: ", header.Hash().Hex())
+
+	block := eth.GetDemoBlock()
+	//block, err := client.BlockByNumber(context.Background(), blockNumber)
+	// if err!= nil {
+	// 	log.Fatal(err)
+	// }
+	fmt.Println("区块高度：", block.Number().Uint64())
+	fmt.Println("区块时间戳：", block.Time())
+	fmt.Println("出块难度：", block.Difficulty().Uint64())  
+	fmt.Println("区块交易数：", len(block.Transactions()))
+	count, err := client.TransactionCount(context.Background(), block.Hash())
+	fmt.Println("区块交易数：", count)
+	fmt.Println("区块Hash：", block.Hash().Hex())
+	fmt.Println("区块父Hash：", block.ParentHash().Hex())
+	
+}
