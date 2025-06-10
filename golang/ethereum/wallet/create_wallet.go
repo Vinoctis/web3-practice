@@ -17,7 +17,6 @@ func CreateWallet() *ecdsa.PrivateKey {
 
 	privateKeyBytes := crypto.FromECDSA(privateKey)
 	
-
 	fmt.Println("private key: ", hexutil.Encode(privateKeyBytes)[2:]) //去掉Ox前缀
 	publicKey := privateKey.Public()
 	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
@@ -29,7 +28,6 @@ func CreateWallet() *ecdsa.PrivateKey {
 	fmt.Println("public key: ", hexutil.Encode(publicKeyBytes)[4:]) //去掉Ox前缀和04前缀
 	address := crypto.PubkeyToAddress(*publicKeyECDSA).Hex() //公钥转地址,也即是后面20位，40字节
 	fmt.Println("address: ", address)
-	fmt.Println("private key: ", privateKeyBytes)
 
 	hash := sha3.NewLegacyKeccak256()
 	hash.Write(publicKeyBytes[1:])
