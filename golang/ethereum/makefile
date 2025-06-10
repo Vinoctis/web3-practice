@@ -3,7 +3,7 @@ APP_NAME=web3-practice
 GOOS=darwin
 GOARCH=arm64
 
-.PHONY: build run test query
+.PHONY: build run test query wallet
 
 build:
 	@echo "Building $(APP_NAME)..."
