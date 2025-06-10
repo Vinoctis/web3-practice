@@ -1,13 +1,12 @@
-package wallet_testing
+package wallet
 
 import (
 	"testing"
 	"github.com/stretchr/testify/assert"
 	"github.com/Vinoctis/ethereum-practice/wallet"
-	// "github.com/Vinoctis/ethereum-practice/svc"
 )
 
-func TestCreateWallet(t *testing.T) {
+func TestCrateWllet(t *testing.T) {
 	privateKey := wallet.CreateWallet()
 	assert.NotNil(t, privateKey)
 }
