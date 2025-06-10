@@ -10,13 +10,20 @@ import (
 )
 
 func CreateWallet() *ecdsa.PrivateKey {
-	privateKey, err := crypto.GenerateKey()
-	if err != nil {
+	// privateKey, err := crypto.GenerateKey()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+
+	privateKey, err := crypto.HexToECDSA("9e404c5ffde6a93a3f13f08c41d73b291fbf588b31653da867129b33b77275de")
+
+	if err!= nil {
 		log.Fatal(err)
 	}
 
 	privateKeyBytes := crypto.FromECDSA(privateKey)
-	
+
 	fmt.Println("private key: ", hexutil.Encode(privateKeyBytes)[2:]) //去掉Ox前缀
 	publicKey := privateKey.Public()
 	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
