@@ -9,17 +9,19 @@ import (
 	"fmt"
 )
 
-func CreateWallet() *ecdsa.PrivateKey {
-	// privateKey, err := crypto.GenerateKey()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-
-	privateKey, err := crypto.HexToECDSA("9e404c5ffde6a93a3f13f08c41d73b291fbf588b31653da867129b33b77275de")
-
-	if err!= nil {
-		log.Fatal(err)
+func CreateWallet(hex string) *ecdsa.PrivateKey {
+	var err error
+	var privateKey *ecdsa.PrivateKey
+	if hex != "" {
+		privateKey, err = crypto.HexToECDSA(hex)
+		if err!= nil {
+			log.Fatal(err)
+		}
+	} else {
+		privateKey, err = crypto.GenerateKey()
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	privateKeyBytes := crypto.FromECDSA(privateKey)
