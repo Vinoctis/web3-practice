@@ -55,7 +55,7 @@ func TransferToken(ethClient *svc.EthClient, privateKey *ecdsa.PrivateKey, to st
 	var data []byte
 	data = append(data, methdID...)
 	data = append(data, paddedAddress...)
-	data = append(data,paddedAmount...)
+	data = append(data, paddedAmount...)
 
 	gasLimit , err := client.EstimateGas(context.Background(), ethereum.CallMsg{
 		To: toAddress, 

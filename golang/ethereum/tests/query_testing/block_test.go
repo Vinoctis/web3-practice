@@ -40,3 +40,9 @@ func TestGetReceiptsInfoByTx(t *testing.T) {
 	receipts,_ := query.GetReceiptsInfoByTx(client, *transactions[0])
 	assert.NotNil(t, receipts)
 }
+
+func TestGetBalance(t *testing.T) {
+	client := svc.NewEthClient()
+	address := "0xb0Ee223CfeCABE681B66aDd0eA3288ca1CAf95f0"
+	query.GetBalance(client, address)
+}

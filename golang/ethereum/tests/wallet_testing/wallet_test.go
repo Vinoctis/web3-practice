@@ -28,3 +28,14 @@ func TestTransfer(t *testing.T) {
 }
 
 
+// func TestTransferToken(t *testing.T) {
+// 	privateKeyECDSA := "b0adaf63abfaf4e6171f6de80ae3f657d0858db8adc8343768763c2e856532e1"
+// 	privateKey := wallet.CreateWallet(privateKeyECDSA)
+// 	assert.NotNil(t, privateKey)
+// 	ethClient := svc.NewEthClient()
+// 	assert.NotNil(t, ethClient)
+// 	toAddress := ""
+// }
+
+
+
