@@ -37,7 +37,6 @@ func Transfer(ethClient *svc.EthClient, privateKey *ecdsa.PrivateKey, to string,
 	toAddress := common.HexToAddress(to)
 	var data []byte
 	tx := types.NewTransaction(nounce, toAddress, value, gasLimit, gasPrice, data)
-``
 	chainID, err := client.NetworkID(context.Background())
 	if err!= nil {
 		log.Fatal(err)

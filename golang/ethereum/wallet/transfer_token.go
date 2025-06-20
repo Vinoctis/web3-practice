@@ -12,9 +12,10 @@ import (
 	"log"
 	"fmt"
 	"math/big"
+	"github.com/ethereum/go-ethereum"
 )
 
-func TransferToken(ethClient *svc.EthClient, privateKey *ecdsa.PrivateKey, to string, token string,  value *big.Int) {
+func TransferToken(ethClient *svc.EthClient, privateKey *ecdsa.PrivateKey, to string, token string,  amount *big.Int) string {
 	publicKey := privateKey.Public()
 	publicECDSA, ok  := publicKey.(*ecdsa.PublicKey)
 	if !ok {
@@ -27,6 +28,7 @@ func TransferToken(ethClient *svc.EthClient, privateKey *ecdsa.PrivateKey, to st
 	if err != nil {
 		log.Fatal(err)
 	}
+	fmt.Println("gasPrice is :", gasPrice)
 
 	fromAddress := crypto.PubkeyToAddress(*publicECDSA)
 	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
@@ -35,9 +37,8 @@ func TransferToken(ethClient *svc.EthClient, privateKey *ecdsa.PrivateKey, to st
 	}
 	toAddress := common.HexToAddress(to)
 	tokenAddress := common.HexToAddress(token)
-
 	// 函数名将是传递函数的名称，相当于行数选择器
-	// 即 ERC-20 规范中的 transfer 和参数类型。 第一个参数类型是 address（令牌的接收者），第二个类型是 uint256（要发送的代币数量）。
+	// 即 ERC-20 规范中的 transfer 和参数类型。 第一个参数类型是 address（令牌的接收者），第二个类型是 uint256（要发送的代币数量）
 	//不需要没有空格和参数名称。 我们还需要用字节切片格式。
 	transferFnSignature := []byte("transfer(address,uint256)")
 	hash := sha3.NewLegacyKeccak256()
@@ -47,24 +48,25 @@ func TransferToken(ethClient *svc.EthClient, privateKey *ecdsa.PrivateKey, to st
 	fmt.Println("methodID: ", hexutil.Encode(methodID))// 0xa9059cbb
 	paddedAddress := common.LeftPadBytes(toAddress.Bytes(), 32) // 地址左填充至32字节
 	fmt.Println("paddedAddress: ",hexutil.Encode(paddedAddress)) // 数值左填充至32字节
-	amount := new(big.Int)
-	amount.SetString("1000000000000", 10)
 	paddedAmount := common.LeftPadBytes(amount.Bytes(), 32)
 	fmt.Println("paddedAmount: " , hexutil.Encode(paddedAmount))
 
 	var data []byte
-	data = append(data, methdID...)
+	data = append(data, methodID...)
 	data = append(data, paddedAddress...)
 	data = append(data, paddedAmount...)
 
 	gasLimit , err := client.EstimateGas(context.Background(), ethereum.CallMsg{
-		To: toAddress, 
+		From: fromAddress,
+		To:   &tokenAddress,
 		Data: data, 
 	})
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Println("gasLimit: ", gasLimit)
+	//因为是转账代币所以 value传 0 
+	value := big.NewInt(0)
 	tx := types.NewTransaction(nonce, tokenAddress, value, gasLimit, gasPrice, data)
 	chainID , err  := client.NetworkID(context.Background())
 	if err!= nil {
@@ -75,7 +77,7 @@ func TransferToken(ethClient *svc.EthClient, privateKey *ecdsa.PrivateKey, to st
 		log.Fatal(err)
 	}
 
-	err := client.SendTransaction(context.Background(), signedTx)
+	err =  client.SendTransaction(context.Background(), signedTx)
 	fmt.Printf("tx sent: %s", signedTx.Hash().Hex())
 	return signedTx.Hash().Hex()
 }
