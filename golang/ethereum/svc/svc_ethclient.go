@@ -10,6 +10,7 @@ import (
 
 type EthClient struct {
 	Client *ethclient.Client	
+	RpcClient *ethclient.Client
 }
 func NewEthClient() *EthClient {
 	client, err := ethclient.Dial("https://eth-sepolia.g.alchemy.com/v2/Xv7ZCu3-aOwIQSMKJ8g7EwID1YlrBA1J")
@@ -17,6 +18,14 @@ func NewEthClient() *EthClient {
 		log.Fatal(err)
 	}
 	return &EthClient{Client: client}
+}
+
+func NewRpcEthClient() *EthClient {
+	client, err := ethclient.Dial("wss://eth-sepolia.g.alchemy.com/v2/Xv7ZCu3-aOwIQSMKJ8g7EwID1YlrBA1J")
+	if err!= nil {
+		log.Fatal(err)
+	}
+	return &EthClient{RpcClient: client}
 }
 
 func (eth *EthClient) Dial(url string) {

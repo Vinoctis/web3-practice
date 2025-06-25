@@ -41,8 +41,7 @@ func TestGetReceiptsInfoByTx(t *testing.T) {
 	assert.NotNil(t, receipts)
 }
 
-func TestGetBalance(t *testing.T) {
-	client := svc.NewEthClient()
-	address := "0xb0Ee223CfeCABE681B66aDd0eA3288ca1CAf95f0"
-	query.GetBalance(client, address)
+func TestDescribeLatestBlock(t *testing.T) {
+	client := svc.NewRpcEthClient()
+	query.DescribeLatestBlock(client)
 }
