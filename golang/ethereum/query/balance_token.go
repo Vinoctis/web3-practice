@@ -3,7 +3,7 @@ package query
 import (
 	"math/big"
 	"github.com/Vinoctis/ethereum-practice/svc"
-	"github.com/Vinoctis/ethereum-practice/contract"
+	"github.com/Vinoctis/ethereum-practice/contract/gen"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"log"
