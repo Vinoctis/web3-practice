@@ -7,13 +7,14 @@ import (
 	"gorm.io/driver/mysql"
 	"blog/internal/model"
 	"blog/internal/controller"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	host := "127.0.0.1"
-	username := "vinoctis"
+	username := "root"
 	password := "123456"
-	port := "3306"
+	port := "33061"
 	dbname := "blog"
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, host, port, dbname)
@@ -32,8 +33,10 @@ func main() {
 	//初始化路由
 	r := gin.Default()
 	
-	pubic := r.Group("/api/v1")
+	public := r.Group("/api/v1")
 	{
 		public.POST("/register", authController.Register)
 	}
+
+	r.Run(":8080")
 }
