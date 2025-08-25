@@ -6,9 +6,9 @@ import (
 	"fmt"
 )
 
-var secretKey    = []bytes("web3-practice")
+var secretKey = []byte("web3-practice")
 
-const signMethod = jwt.SigningMethodHS256
+var signMethod = jwt.SigningMethodHS256
 
 func GenerateToken(userID int, userName string) (string, error) {
 	claims := jwt.MapClaims{
@@ -17,7 +17,7 @@ func GenerateToken(userID int, userName string) (string, error) {
 		"user_name" : userName,
 		"iss"       : "web3-blog",
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token := jwt.NewWithClaims(signMethod, claims)
 	return token.SignedString(secretKey)
 }
 

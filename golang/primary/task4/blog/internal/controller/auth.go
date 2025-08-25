@@ -1,9 +1,13 @@
-package controller 
+package controller
 
 import (
-	"github.com/gin-gonic/gin"
-	"blog/internal/service"
 	"blog/internal/model"
+	"blog/internal/response"
+	"blog/internal/service"
+	"blog/internal/utils"
+	"fmt"
+
+	"github.com/gin-gonic/gin"
 )
 
 type AuthController struct {
@@ -21,9 +25,37 @@ func (ac *AuthController) Register(c *gin.Context) {
 	email := c.PostForm("email")
 	err := ac.UserService.Register(&model.User{Name: name, Email: email})
 	if err != nil {
-		c.JSON(500, gin.H{
-			"msg": "注册失败",
-			"err": err.Error(),
-		})
+		response.Fail(c, "注册失败:"+err.Error(), nil)
+	} else {
+		response.Ok(c, nil)
 	}
+}
+
+func (ac *AuthController) Login(c *gin.Context) {
+	var loginReq struct {
+		Email string `json:"email" binding:"required,email"` 
+	}
+
+	if err := c.ShouldBindJSON(&loginReq);err != nil {
+		response.Fail(c, "登录失败:"+err.Error(), nil)
+		return
+	}
+	// name := c.PostForm("name")
+	user, err  := ac.UserService.Login(loginReq.Email)
+	if err != nil {
+		response.Fail(c, "登录失败", nil)
+	} 
+	//生成JWT token
+	token, err := utils.GenerateToken(int(user.ID), user.Name)
+	if err != nil {
+		response.Fail(c, "登录失败:"+err.Error(), nil)
+		return
+	}
+	claims, _ := c.Get("claims")
+	fmt.Printf("claims: %v", claims)
+	//返回token
+	response.Ok(c, gin.H{
+		"token": token, 
+		"user": gin.H{"id": user.ID, "name": user.Name, "email": user.Email},
+	})
 }
