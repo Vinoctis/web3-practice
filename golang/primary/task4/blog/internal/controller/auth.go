@@ -37,18 +37,18 @@ func (ac *AuthController) Login(c *gin.Context) {
 	}
 
 	if err := c.ShouldBindJSON(&loginReq);err != nil {
-		response.Fail(c, "登录失败:"+err.Error(), nil)
+		response.Fail(c, "登录失败,请求参数有误:"+err.Error(), nil)
 		return
 	}
-	// name := c.PostForm("name")
 	user, err  := ac.UserService.Login(loginReq.Email)
 	if err != nil {
-		response.Fail(c, "登录失败", nil)
+		response.Fail(c, "登录失败，用户验证失败", nil)
+		return
 	} 
 	//生成JWT token
 	token, err := utils.GenerateToken(int(user.ID), user.Name)
 	if err != nil {
-		response.Fail(c, "登录失败:"+err.Error(), nil)
+		response.Fail(c, "登录失败，token生成失败"+err.Error(), nil)
 		return
 	}
 	claims, _ := c.Get("claims")
@@ -58,4 +58,5 @@ func (ac *AuthController) Login(c *gin.Context) {
 		"token": token, 
 		"user": gin.H{"id": user.ID, "name": user.Name, "email": user.Email},
 	})
+	return
 }
