@@ -30,7 +30,9 @@ func main() {
 
 	//初始化服务
 	userService := service.NewUserService(db)
+	postService := service.NewPostService(db)
 	authController := controller.NewAuthController(userService)
+	postController := controller.NewPostController(postService)
 
 	//初始化路由
 	r := gin.Default()
@@ -48,6 +50,15 @@ func main() {
 	{
 		//登录
 		private.POST("/login", authController.Login)
+
+		//文章相关接口
+		post := private.Group("/post")
+		{
+			post.POST("/create", postController.Create)
+			post.POST("/get", postController.Get)
+			// post.POST("/update", postController.Update)
+			// post.POST("/delete", postController.Delete)
+		}
 	}
 	r.Run(":8080")
 }

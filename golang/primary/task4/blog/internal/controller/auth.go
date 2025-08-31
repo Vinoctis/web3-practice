@@ -5,7 +5,7 @@ import (
 	"blog/internal/response"
 	"blog/internal/service"
 	"blog/internal/utils"
-	"fmt"
+	//"fmt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -51,8 +51,8 @@ func (ac *AuthController) Login(c *gin.Context) {
 		response.Fail(c, "登录失败，token生成失败"+err.Error(), nil)
 		return
 	}
-	claims, _ := c.Get("claims")
-	fmt.Printf("claims: %v", claims)
+	//claims, _ := c.Get("claims")
+	//fmt.Printf("claims: %+v", claims)
 	//返回token
 	response.Ok(c, gin.H{
 		"token": token, 
